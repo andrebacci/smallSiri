@@ -14,6 +14,7 @@
 		1507400F21EFC9BF005A2885 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1507400D21EFC9BF005A2885 /* LaunchScreen.storyboard */; };
 		1507401A21EFC9C0005A2885 /* Vocal_AssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1507401921EFC9C0005A2885 /* Vocal_AssistantTests.swift */; };
 		1507402521EFC9C0005A2885 /* Vocal_AssistantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1507402421EFC9C0005A2885 /* Vocal_AssistantUITests.swift */; };
+		15568CD421F33FA200A78FC0 /* test.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 15568CD321F33FA200A78FC0 /* test.m4a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		1507402021EFC9C0005A2885 /* Vocal AssistantUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Vocal AssistantUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1507402421EFC9C0005A2885 /* Vocal_AssistantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vocal_AssistantUITests.swift; sourceTree = "<group>"; };
 		1507402621EFC9C0005A2885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		15568CD321F33FA200A78FC0 /* test.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.m4a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 		1507400321EFC9B1005A2885 /* Vocal Assistant */ = {
 			isa = PBXGroup;
 			children = (
+				15568CD221F33F7300A78FC0 /* Resources */,
 				1507400421EFC9B1005A2885 /* AppDelegate.swift */,
 				1507400621EFC9B1005A2885 /* ViewController.swift */,
 				1507400821EFC9B1005A2885 /* Main.storyboard */,
@@ -123,6 +126,15 @@
 				1507402621EFC9C0005A2885 /* Info.plist */,
 			);
 			path = "Vocal AssistantUITests";
+			sourceTree = "<group>";
+		};
+		15568CD221F33F7300A78FC0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				15568CD321F33FA200A78FC0 /* test.m4a */,
+			);
+			name = Resources;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15568CD421F33FA200A78FC0 /* test.m4a in Resources */,
 				1507400F21EFC9BF005A2885 /* LaunchScreen.storyboard in Resources */,
 				1507400C21EFC9BF005A2885 /* Assets.xcassets in Resources */,
 				1507400A21EFC9B1005A2885 /* Main.storyboard in Resources */,

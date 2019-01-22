@@ -25,12 +25,12 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cyw-9t-GqJ">
-                                <rect key="frame" x="132" y="542" width="110" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bk8-pv-GMe">
+                                <rect key="frame" x="119" y="508" width="136" height="81"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="record"/>
+                                <state key="normal" title="start"/>
                                 <connections>
-                                    <action selector="startRecord:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ddK-sc-bN2"/>
+                                    <action selector="recordBtnPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kaV-2j-RHV"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -38,7 +38,6 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="recordBtn" destination="cyw-9t-GqJ" id="ck0-TD-LVd"/>
                         <outlet property="textView" destination="k7s-NN-Hem" id="YY9-vH-2oh"/>
                     </connections>
                 </viewController>
