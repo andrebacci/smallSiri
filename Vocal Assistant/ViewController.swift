@@ -15,6 +15,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     // objects
     @IBOutlet weak var recordBtn: UIButton!
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var label: UILabel!
     
     // private
     var audioPlayer: AVAudioPlayer!
@@ -24,6 +25,9 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     private var recognitionTask: SFSpeechRecognitionTask?
     
     private let audioEngine = AVAudioEngine()
+    private let synth = AVSpeechSynthesizer()
+    
+    var utterance = AVSpeechUtterance()
     
     override func viewDidAppear(_ animated: Bool)
     {
@@ -92,6 +96,8 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             print("AudioSession properties weren't set because of an error.")
         }
         
+        print("Start recording...")
+        
         self.recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         
         let inputNode = audioEngine.inputNode
@@ -103,16 +109,22 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             if result != nil {
                 let speechedText = result?.bestTranscription.formattedString
                 
+                // Write on textView
+                self.textView.text = speechedText
                 
                 let words = speechedText?.components(separatedBy: " ")
-                
-                for word in words! {
-                    if word.contains("Stato del treno") {
-                        print("Trenitalia")
+                if words?.count == 1 {
+                    if words?[0].lowercased() == "trenitalia" {
+                        self.manageTrenitalia()
                     }
                 }
                 
-                self.textView.text = speechedText
+                /* for word in words! {
+                    if word.contains("Stato del treno") {
+                        print("Trenitalia")
+                    }
+                } */
+                
                 isFinal = (result?.isFinal)!
             }
             
@@ -141,10 +153,25 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         textView.text = "Say something, I'm listening!"
     }
     
+    func stopRecording() {
+        self.audioEngine.stop()
+        self.recognitionRequest?.endAudio()
+    }
+    
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
         if available {
             
         }
+    }
+    
+    func manageTrenitalia() {
+        print("Start manageTrenitalia...")
+        
+        stopRecording()
+        
+        utterance = AVSpeechUtterance(string: "Stazione di partenza del treno")
+        utterance.rate = 0.5
+        synth.speak(utterance)
     }
 }
 

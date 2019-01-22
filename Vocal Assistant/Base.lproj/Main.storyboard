@@ -33,11 +33,20 @@
                                     <action selector="recordBtnPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kaV-2j-RHV"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DRK-Ex-QRA">
+                                <rect key="frame" x="16" y="508" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="label" destination="DRK-Ex-QRA" id="2Li-bA-aox"/>
+                        <outlet property="recordBtn" destination="Bk8-pv-GMe" id="Wbe-Mf-TAg"/>
                         <outlet property="textView" destination="k7s-NN-Hem" id="YY9-vH-2oh"/>
                     </connections>
                 </viewController>
