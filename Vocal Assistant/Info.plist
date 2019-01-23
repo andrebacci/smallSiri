@@ -38,5 +38,10 @@
 	<string>Can recognize speech</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Can use microphone</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

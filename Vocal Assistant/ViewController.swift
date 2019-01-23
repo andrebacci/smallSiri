@@ -29,7 +29,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     var utterance = AVSpeechUtterance()
     
-    var isTrenitalia = false
+    var isTrainService = false
     
     override func viewDidAppear(_ animated: Bool)
     {
@@ -47,25 +47,6 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         SFSpeechRecognizer.requestAuthorization {authStatus in
             if authStatus == SFSpeechRecognizerAuthorizationStatus.authorized {
                 print("Authorized")
-                
-                /* if let path = Bundle.main.url(forResource: "test", withExtension:"m4a") {
-                    do {
-                        let sound = try AVAudioPlayer(contentsOf: path)
-                        self.audioPlayer = sound
-                        sound.play()
-                    } catch {
-                        print("Error!")
-                    } */
-                    
-                    /* let recognizer = SFSpeechRecognizer()
-                    let request = SFSpeechURLRecognitionRequest(url: path)
-                    recognizer?.recognitionTask(with: request) {(result, error) in
-                        if let error = error {
-                            print("There was an error: \(error)")
-                        } else {
-                            print(result?.bestTranscription.formattedString)
-                        }
-                    } */
             }
         }
     }
@@ -84,9 +65,17 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     func startRecording() {
-        if recognitionTask != nil {
-            recognitionTask?.cancel()
-            recognitionTask = nil
+        // If speech recognition is unavailable then do not attempt to start.
+        guard speechRecognizer!.isAvailable else {
+            return
+        }
+        
+        label.text = "Recording..."
+        
+        // If we have a recognition task still running, so cancel it before starting a new one.
+        if let recognitionTask = recognitionTask {
+            recognitionTask.cancel()
+            self.recognitionTask = nil
         }
         
         let audioSession = AVAudioSession.sharedInstance()
@@ -106,6 +95,23 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         let recognitionRequest = self.recognitionRequest
         recognitionRequest?.shouldReportPartialResults = true
         
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest!, resultHandler: {(result, error) in
+            if let result = result {
+                let command = result.bestTranscription.formattedString
+                
+                if command.lowercased().hasSuffix("stop") {
+                    if command.lowercased().hasPrefix("stato del treno") {
+                        self.trainServiceManager(command)
+                    }
+                }
+            }
+            
+            if result?.isFinal ?? (error != nil) {
+                inputNode.removeTap(onBus: 0)
+                self.stopRecording()
+            }
+        })
+        
         let recordingFormat = inputNode.outputFormat(forBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) {(buffer, when) in
             self.recognitionRequest?.append(buffer)
@@ -120,70 +126,20 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         }
         
         textView.text = "Say something, I'm listening!"
-        
-        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest!, resultHandler: {(result, error) in
-            var isFinal = false
-            if result != nil {                
-                let speechedText = result?.bestTranscription.formattedString
-                if speechedText != nil {
-                    self.audioEngine.stop()
-                    
-                    //self.recognitionRequest?.endAudio()
-                    self.audioEngine.inputNode.removeTap(onBus: 0)
-                }
-                
-                // Write on textView
-                self.textView.text = speechedText
-                
-                let words = speechedText?.components(separatedBy: " ")
-                if (words?.count)! > 0 {
-                    //self.stopRecording()
-                }
-                
-                if words?.count == 1 {
-                    let command = words?[0]
-                    
-                    if command?.lowercased() == "trenitalia" {
-                        self.isTrenitalia = true
-                        self.speak("Stazione di partenza del treno")
-                        //self.startRecording()
-                    } else {
-                        
-                    }
-                } else {
-                    if self.isTrenitalia {
-                        self.manageTrenitalia(words!)
-                    } else {
-                        
-                    }
-                }
-                
-                /* for word in words! {
-                    if word.contains("Stato del treno") {
-                        print("Trenitalia")
-                    }
-                } */
-                
-                isFinal = (result?.isFinal)!
-            }
-            
-            if error != nil || isFinal {
-                self.audioEngine.stop()
-                inputNode.removeTap(onBus: 0)
-                
-                self.recognitionRequest = nil
-                self.recognitionTask = nil
-            }
-        })
     }
     
     func stopRecording() {
-        self.recognitionRequest?.endAudio()
+        /* self.recognitionRequest?.endAudio()
         self.audioEngine.stop()
         audioEngine.inputNode.removeTap(onBus: 0)
         
         self.recognitionRequest = nil
-        self.recognitionTask = nil
+        self.recognitionTask = nil */
+        
+        self.audioEngine.stop()
+        self.recognitionRequest?.endAudio()
+        
+        label.text = "Stopped recording"
     }
     
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
@@ -192,21 +148,52 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         }
     }
     
-    func manageTrenitalia(_ words: [String]) {
-        print("Start manageTrenitalia...")
-        
-        for word in words {
-            print(word)
-        }
-            
-    }
-    
     func speak(_ text: String) {
         print("Speak: " + text)
         
         utterance = AVSpeechUtterance(string: text)
         utterance.rate = 0.5
         synth.speak(utterance)
+    }
+    
+    func trainServiceManager(_ command: String) {
+        var numberTrain = 0
+        var station = "S00228"
+        
+        print("Start manageTrenitalia...")
+        print("Command:", command)
+        
+        let strArray = command.components(separatedBy: " ")
+        for str in strArray {
+            if str.lowercased() == "treno" {
+                let index: Int = strArray.index(of: str)!
+                if Int(strArray[index + 1]) != nil {
+                    numberTrain = Int(strArray[index + 1])!
+                    if numberTrain != 0 {
+                        break
+                    }
+                }
+            }
+        }
+        
+        var url = "http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/andamentoTreno/"
+        url += station + "/" + String(numberTrain)
+        
+        postUrl(url)
+    }
+    
+    func postUrl(_ urlString: String) {
+        let url = URL(string:urlString)
+        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            let str = String(data: data!, encoding: .utf8)
+            print(str)
+            
+            }.resume()
     }
 }
 
