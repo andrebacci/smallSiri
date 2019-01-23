@@ -29,6 +29,8 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     
     var utterance = AVSpeechUtterance()
     
+    var isTrenitalia = false
+    
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
@@ -104,18 +106,55 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         let recognitionRequest = self.recognitionRequest
         recognitionRequest?.shouldReportPartialResults = true
         
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) {(buffer, when) in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        
+        do {
+            try audioEngine.start()
+        } catch {
+            print("audioEngine couldn't start because of an error")
+        }
+        
+        textView.text = "Say something, I'm listening!"
+        
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest!, resultHandler: {(result, error) in
             var isFinal = false
-            if result != nil {
+            if result != nil {                
                 let speechedText = result?.bestTranscription.formattedString
+                if speechedText != nil {
+                    self.audioEngine.stop()
+                    
+                    //self.recognitionRequest?.endAudio()
+                    self.audioEngine.inputNode.removeTap(onBus: 0)
+                }
                 
                 // Write on textView
                 self.textView.text = speechedText
                 
                 let words = speechedText?.components(separatedBy: " ")
+                if (words?.count)! > 0 {
+                    //self.stopRecording()
+                }
+                
                 if words?.count == 1 {
-                    if words?[0].lowercased() == "trenitalia" {
-                        self.manageTrenitalia()
+                    let command = words?[0]
+                    
+                    if command?.lowercased() == "trenitalia" {
+                        self.isTrenitalia = true
+                        self.speak("Stazione di partenza del treno")
+                        //self.startRecording()
+                    } else {
+                        
+                    }
+                } else {
+                    if self.isTrenitalia {
+                        self.manageTrenitalia(words!)
+                    } else {
+                        
                     }
                 }
                 
@@ -136,26 +175,15 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 self.recognitionTask = nil
             }
         })
-        
-        let recordingFormat = inputNode.outputFormat(forBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) {(buffer, when) in
-            self.recognitionRequest?.append(buffer)
-        }
-        
-        audioEngine.prepare()
-        
-        do {
-            try audioEngine.start()
-        } catch {
-            print("audioEngine couldn't start because of an error")
-        }
-        
-        textView.text = "Say something, I'm listening!"
     }
     
     func stopRecording() {
-        self.audioEngine.stop()
         self.recognitionRequest?.endAudio()
+        self.audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
+        
+        self.recognitionRequest = nil
+        self.recognitionTask = nil
     }
     
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
@@ -164,12 +192,19 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         }
     }
     
-    func manageTrenitalia() {
+    func manageTrenitalia(_ words: [String]) {
         print("Start manageTrenitalia...")
         
-        stopRecording()
+        for word in words {
+            print(word)
+        }
+            
+    }
+    
+    func speak(_ text: String) {
+        print("Speak: " + text)
         
-        utterance = AVSpeechUtterance(string: "Stazione di partenza del treno")
+        utterance = AVSpeechUtterance(string: text)
         utterance.rate = 0.5
         synth.speak(utterance)
     }
