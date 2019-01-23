@@ -183,17 +183,26 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     func postUrl(_ urlString: String) {
-        let url = URL(string:urlString)
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            if error != nil {
-                print(error)
-                return
+        guard let url = URL(string: urlString) else { return }
+        
+        let session = URLSession.shared
+        session.dataTask(with: url) { (data, response, error) in
+            if let response = response {
+                print(response)
             }
             
-            let str = String(data: data!, encoding: .utf8)
-            print(str)
-            
-            }.resume()
+            if let data = data {
+                print(data)
+                do {
+                    let jsonResp = try JSONSerialization.jsonObject(with: data, options: [])
+                    let train = TrainInfoModel(json: jsonResp as! [String : Any])
+                    print(train?.number)
+                } catch {
+                    print(error)
+                }
+                
+            }
+        }.resume()
     }
 }
 

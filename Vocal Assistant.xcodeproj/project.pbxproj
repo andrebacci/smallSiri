@@ -15,6 +15,7 @@
 		1507401A21EFC9C0005A2885 /* Vocal_AssistantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1507401921EFC9C0005A2885 /* Vocal_AssistantTests.swift */; };
 		1507402521EFC9C0005A2885 /* Vocal_AssistantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1507402421EFC9C0005A2885 /* Vocal_AssistantUITests.swift */; };
 		15568CD421F33FA200A78FC0 /* test.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 15568CD321F33FA200A78FC0 /* test.m4a */; };
+		15E3F70721F9242D00B3A0AF /* TrainInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E3F70621F9242D00B3A0AF /* TrainInfoModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		1507402421EFC9C0005A2885 /* Vocal_AssistantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vocal_AssistantUITests.swift; sourceTree = "<group>"; };
 		1507402621EFC9C0005A2885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15568CD321F33FA200A78FC0 /* test.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.m4a; sourceTree = "<group>"; };
+		15E3F70621F9242D00B3A0AF /* TrainInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainInfoModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				1507400B21EFC9BF005A2885 /* Assets.xcassets */,
 				1507400D21EFC9BF005A2885 /* LaunchScreen.storyboard */,
 				1507401021EFC9BF005A2885 /* Info.plist */,
+				15E3F70621F9242D00B3A0AF /* TrainInfoModel.swift */,
 			);
 			path = "Vocal Assistant";
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15E3F70721F9242D00B3A0AF /* TrainInfoModel.swift in Sources */,
 				1507400721EFC9B1005A2885 /* ViewController.swift in Sources */,
 				1507400521EFC9B1005A2885 /* AppDelegate.swift in Sources */,
 			);
